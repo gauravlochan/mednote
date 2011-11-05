@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, PhotoCaptureExample!</string>
+    <string name="app_name">Track My Health</string>
+    <string name="logintext">Enter your credentials</string>
+    <string name="AddEntry">Add a new medical record:</string>
+</resources>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/AddEntry"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="left"
+            android:text="@string/AddEntry"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <!-- Date -->
+    <LinearLayout
+        android:id="@+id/linearLayoutDate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <DatePicker
+            android:id="@+id/datePicker1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+        <requestFocus />
+        </DatePicker>
+        
+    </LinearLayout>
+
+    <!-- Visit Name -->
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/VisitNameLabel"
+            android:text="Visit Name"
+            style="@style/label" />
+
+        <EditText
+            android:id="@+id/VisitNameEditText"
+            style="@style/editbox">
+        </EditText>
+        
+	</LinearLayout>
+
+    <!-- Doctor Name -->
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/DoctorLabel"
+            android:text="Doctor"
+            style="@style/label" />
+
+        <EditText
+            android:id="@+id/DoctorEditText"
+            style="@style/editbox">
+        </EditText>
+    </LinearLayout>
+    
+    <!-- Hospital Name -->
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/HospitalLabel"
+            android:text="Hospital"
+            style="@style/label" />
+
+        <EditText
+            android:id="@+id/HospitalEditText"
+            style="@style/editbox">
+        </EditText>
+    </LinearLayout>
+        
+    <!-- Remarks -->
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/RemarksLabel"
+            android:text="Remarks"
+            style="@style/label" />
+
+        <EditText
+            android:id="@+id/RemarksEditText"
+            style="@style/editbox">
+        </EditText>
+    </LinearLayout>
+
+    <!-- Image -->
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/ImageLabel"
+            android:text="Image"
+            style="@style/label" />
+
+        <Button
+            android:id="@+id/TakePhoto"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Take Photo" />
+
+    </LinearLayout>
+        
+    <LinearLayout
+        android:id="@+id/linearLayout0"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/buttonUpload"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Upload"
+            android:layout_gravity="center" />
+        
+    </LinearLayout>
+
+</LinearLayout>
