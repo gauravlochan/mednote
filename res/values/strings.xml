@@ -4,4 +4,5 @@
     <string name="app_name">Track My Health</string>
     <string name="logintext">Enter your credentials</string>
     <string name="AddEntry">Add a new medical record:</string>
+    <string name="ImageCaptured">Captured</string>
 </resources>

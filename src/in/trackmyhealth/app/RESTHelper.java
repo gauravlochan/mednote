@@ -29,92 +29,60 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class RESTHelper {
-	private static String server = "http://192.168.10.119:3000/receipt/create";
-
-	/**
-	 * Upload Multipart
-	 * 
-	 * @param filePath
-	 */
-	public static void uploadMultipart(String filePath) {
-		Log.i(Global.Company, "Ready to upload file...");
-		HttpClient client = new DefaultHttpClient();
-		client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-				HttpVersion.HTTP_1_1);
-
-		Log.i(Global.Company, "Set remote URL...");
-		HttpPost httpPost = new HttpPost(server);
-        //httpPost.addHeader("Accept", "application/json");
+	private static String _server = "http://192.168.10.119:3000/";
 	
-		MultipartEntity entity = new MultipartEntity();
-		   //HttpMultipartMode.BROWSER_COMPATIBLE);
-
-		Log.i(Global.Company, "Adding file(s)...");
-		
-		try {
-			entity.addPart("name", new StringBody("Hysteria"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		File image = new File(filePath);
-		FileBody fileBody = new FileBody(image, "application/octet-stream");
-		entity.addPart("image", fileBody);
-
-		Log.i(Global.Company, "Set entity...");
-		httpPost.setEntity(entity);
-		
-		handleResponse(httpPost);
-	}
-	
-	
-	public static void uploadJson(String filePath) {
-		JSONObject object = new JSONObject();
+	public static void addEntry(Entry entry, String filePath) {
+		JSONObject object = entry.extractJSONOjbect(); 
+		String serverUrl = 	_server.concat("receipt/create_api");
 
 		try {
+			// object.put("next_appointment", "2011-11-20");
 			
-			object.put("name", "Tetanus");
-			object.put("date", "2011-11-10");
-			object.put("doctor", "Chinappa");
-			object.put("hospital", "Manipal hospital");
-			object.put("next_appointment", "2011-11-20");
-			object.put("remark", "Paracetamol");
-			
-			String imgString = null;
 			try {
+				String imgString = null;
 				imgString = Base64.encodeFromFile(filePath);
+				object.put("image", imgString);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			object.put("image", imgString);
-			
-//			try {
-//				FileInputStream fis = new FileInputStream(filePath);
-//				object.put("image", convertStreamToString(fis));
-//			} catch (FileNotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			postJSONObject(server, object);	
+			postJSONObject(serverUrl, object);	
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	public static String Authenticate(String username, String password) {
+		JSONObject auth = new JSONObject();
+		String result = null;
+		String serverUrl = _server.concat("auth_verify");
+		
+		try {
+			auth.put("username", username);
+			auth.put("password", password);
+			result = postJSONObject(serverUrl, auth);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Log.i(Global.Company, result);
+		return result;
+	}
+	
 	/**
      * A simple method to make a REST call to the specified server.  Good for 
      * testing
      * 
-     * @param server
+     * @param serverUrl
      */
-    public static void postJSONObject(String server, JSONObject payload) { 
+    public static String postJSONObject(String serverUrl, JSONObject payload) { 
         Log.d(Global.Company, "Attempting call to REST");
 
-        HttpPost httpPost = new HttpPost(server);
+        HttpPost httpPost = new HttpPost(serverUrl);
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.addHeader("Accept", "application/json");
         
@@ -128,12 +96,13 @@ public class RESTHelper {
             e1.printStackTrace();
         }
         httpPost.setEntity(requestEntity);
-        handleResponse(httpPost);
+        return handleResponse(httpPost);
     }
     
     
-    private static void handleResponse(HttpPost httpPost) {
+    private static String handleResponse(HttpPost httpPost) {
         HttpClient httpClient = new DefaultHttpClient();
+        String result = null;
 
         try {
             HttpResponse response = null;
@@ -141,20 +110,20 @@ public class RESTHelper {
             response = httpClient.execute(httpPost);
             
             if (response != null) {
-                Log.d(Global.Company, "Successful call to REST");
+                Log.d(Global.Company, "Competed call to REST");
                 Log.d(Global.Company, response.getStatusLine().toString());
                 
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     InputStream instream = entity.getContent();
-                    String result = convertStreamToString(instream);
+                    result = convertStreamToString(instream);
                     Log.i(Global.Company, "Result of converstion: [" + result + "]");
                     instream.close();
                 } else {
                     Log.d(Global.Company, "Empty Http response");
                 }
             } else {
-                Log.d(Global.Company, "Unsuccessful call to REST");
+                Log.d(Global.Company, "Could not call REST");
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -162,7 +131,9 @@ public class RESTHelper {
             e.printStackTrace();
         }
         
+        return result;
     }
+    
     
     private static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -195,6 +166,40 @@ public class RESTHelper {
 //		entity.addPart("image", new FileBody(imageFile));
 //		httpPost.setEntity(entity);
 //		response = httpclient.execute(httpPost);
-//	}
+
+	/**
+	 * Upload Multipart
+	 * 
+	 * @param filePath
+	 */
+	public static void uploadMultipart(String filePath) {
+		Log.i(Global.Company, "Ready to upload file...");
+		HttpClient client = new DefaultHttpClient();
+		client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
+				HttpVersion.HTTP_1_1);
+
+		Log.i(Global.Company, "Set remote URL...");
+		HttpPost httpPost = new HttpPost(_server);
+	
+		MultipartEntity entity = new MultipartEntity();
+
+		Log.i(Global.Company, "Adding file(s)...");
+		
+		try {
+			entity.addPart("name", new StringBody("Hysteria"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		File image = new File(filePath);
+		FileBody fileBody = new FileBody(image, "application/octet-stream");
+		entity.addPart("image", fileBody);
+
+		Log.i(Global.Company, "Set entity...");
+		httpPost.setEntity(entity);
+		
+		handleResponse(httpPost);
+	}
 
 }

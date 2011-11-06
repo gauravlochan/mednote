@@ -1,5 +1,8 @@
 package in.trackmyhealth.app;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,12 +32,40 @@ public class LoginActivity extends Activity {
     public class ButtonClickHandler implements View.OnClickListener 
     {
     	public void onClick( View view ) {
+    		JSONObject json = null;
+
     		// Check credentials
-    		Log.i("MakeMachine", _username.getText().toString() + _pass.getText().toString());
+    		String username = _username.getText().toString();
+    		String password = _pass.getText().toString();
     		
-    		// If succeeded
-    		Intent intent = new Intent(view.getContext(), AddEntryActivity.class);
-            startActivity(intent);
+    		String success = null;
+    		
+    		String result = RESTHelper.Authenticate(username, password);
+    		try {
+				json = new JSONObject(result);
+				success = json.getString("status");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		if (success.equals("false")) {
+    	    	Log.i(Global.Company, "failed");
+    	    	return;
+    		} else {
+        		// If succeeded
+    			String id = "";
+				try {
+					id = json.getString("id");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    			Log.i(Global.Company, "user id ="+id);
+        		Intent intent = new Intent(view.getContext(), AddEntryActivity.class);
+        		intent.putExtra("user_id", id);
+                startActivity(intent);
+    		}
          
     	}
     }

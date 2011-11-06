@@ -2,6 +2,8 @@ package in.trackmyhealth.app;
 
 import java.io.File;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,12 +15,20 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 public class AddEntryActivity extends Activity 
 {
 	protected Button _takePhotoButton;
 	protected Button _uploadButton;
-	protected String _path;
+	protected DatePicker _recordDate;
+	protected EditText _visitName;
+	protected EditText _doctor;
+	protected EditText _hospital;
+	protected EditText _remarks;
+	
+	protected String _imageFilePath;
 	protected boolean _taken;
 	
 	protected static final String PHOTO_TAKEN	= "photo_taken";
@@ -38,7 +48,13 @@ public class AddEntryActivity extends Activity
         _uploadButton = ( Button ) findViewById( R.id.buttonUpload );
         _uploadButton.setOnClickListener( new UploadButtonClickHandler() );
         
-        _path = Environment.getExternalStorageDirectory() + "/medical_record.jpg";
+        _visitName = ( EditText ) findViewById( R.id.VisitNameEditText );
+        _doctor = ( EditText ) findViewById( R.id.DoctorEditText );
+        _hospital = ( EditText ) findViewById( R.id.HospitalEditText );
+        _remarks = ( EditText ) findViewById( R.id.RemarksEditText );
+        _recordDate = (DatePicker) findViewById( R.id.datePicker1 );
+        
+        _imageFilePath = Environment.getExternalStorageDirectory() + "/medical_record.jpg";
     }
   
     
@@ -51,15 +67,25 @@ public class AddEntryActivity extends Activity
     
     public class UploadButtonClickHandler implements View.OnClickListener 
     {
-    	public void onClick( View view ){
-    		uploadRecord();
+    	public void onClick( View view ) {
+    		Entry newEntry = new Entry();
+    		newEntry.user_id = getIntent().getExtras().getString("user_id");
+    		newEntry.visitName = _visitName.getText().toString();
+    		newEntry.doctor = _doctor.getText().toString();
+    		newEntry.hospital = _hospital.getText().toString();
+    		newEntry.remarks = _remarks.getText().toString();
+    		String entryDate = _recordDate.getYear() + "-" + _recordDate.getMonth() + "-" + 
+    						_recordDate.getDayOfMonth();
+    		newEntry.entryDate = entryDate;
+    		
+        	RESTHelper.addEntry(newEntry, _imageFilePath);
     	}
     }
     
     protected void startCameraActivity()
     {
     	Log.i("MakeMachine", "startCameraActivity()" );
-    	File file = new File( _path );
+    	File file = new File( _imageFilePath );
     	Uri outputFileUri = Uri.fromFile( file );
     	
     	Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE );
@@ -93,13 +119,7 @@ public class AddEntryActivity extends Activity
     	_taken = true;
 
     	_takePhotoButton.setEnabled(false);
-    	_takePhotoButton.setText("Clicked");
-    }
-    
-    
-    protected void uploadRecord() {
-    	RESTHelper.uploadJson(_path);
-    	//RESTHelper.uploadMultipart(_path);
+    	_takePhotoButton.setText(R.string.ImageCaptured);
     }
     
     
