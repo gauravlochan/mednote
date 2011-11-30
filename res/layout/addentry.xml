@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_margin="5dip"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -126,21 +127,39 @@
 
     </LinearLayout>
         
-    <LinearLayout
-        android:id="@+id/linearLayout0"
+    <RelativeLayout
+        android:id="@+id/relativeLayout0"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginTop="10dp"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/buttonUpload"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Upload"
-            android:layout_gravity="center" />
-        
-    </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:text="Upload" />
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.80"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/uploadResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="240dip"
+            android:text="Failed"
+            android:visibility="invisible"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </RelativeLayout>
 
 </LinearLayout>
